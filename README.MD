@@ -12,7 +12,7 @@ To deploy this project run the commands listed blow
   git clone https://github.com/M1noa/Ddos-Tool
 ```
 ```bash
-  cd Ddos-Tool
+  cd DDOS-TOOL
 ```
 ```bash
   python3 main.py
